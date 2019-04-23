@@ -3,3 +3,4 @@ export const ADD_TODO_ITEM = 'add_todo_item';
 export const DELETE_TODO_ITEM = 'delete_todo_item';
 export const CHANGE_STYLE_VALUE = 'change_style_value';
 export const INIT_LIST = 'init_list';
+export const GET_INIT_LIST = 'get_init_list';

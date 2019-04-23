@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import "antd/dist/antd.css";
 import store from './store'
 import TodoListUI from './TodoListUI';
-import { getInputChangeAction, getAddItemAction, getDelectItemAction, getstyleChangeAction,initListAction } from './store/actionCreators';
-
+import { getInputChangeAction, getAddItemAction, getDelectItemAction, getstyleChangeAction, getInitList } from './store/actionCreators';
 
 class TodoList extends Component {
   constructor(props) {
@@ -35,7 +34,8 @@ class TodoList extends Component {
   componentDidMount() {
     //组件挂载时候，注册keypress事件
     document.addEventListener('keypress', this.handleEnterKey);
-
+    const action=getInitList();
+    store.dispatch(action);
   }
 
   //判断点击的键盘的keyCode是否为13，是就调用上面的搜索函数

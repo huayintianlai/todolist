@@ -1,5 +1,5 @@
 
-import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM, CHANGE_STYLE_VALUE, INIT_LIST } from './actionTypes'
+import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM, CHANGE_STYLE_VALUE, INIT_LIST, GET_INIT_LIST } from './actionTypes';
 
 export const getInputChangeAction = (value) => ({
     type: CHANGE_INPUT_VALUE,
@@ -25,7 +25,7 @@ export const initListAction = (data) => ({
     data
 })
 
-Axios.get('http://reactlearn.cn').then((res) => {
-    const action =initListAction(res.data);
-    store.dispatch(action);
-  })
+export const getInitList = (data) => ({
+    type: GET_INIT_LIST,
+    data
+})
