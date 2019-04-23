@@ -1,12 +1,8 @@
-import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM, CHANGE_STYLE_VALUE } from './actionTypes'
+import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM, CHANGE_STYLE_VALUE, INIT_LIST } from './actionTypes'
 
 const defaultState = {
     inputValue: "",
-    list: ['Racing car sprays burning fuel into crowd.',
-        'Japanese princess to wed commoner.',
-        'Australian walks 100km after outback crash.',
-        'Man charged over missing wedding girl.',
-        'Los Angeles battles huge wildfires.'],
+    list: [],
     style: {},
     changeIndex: []
 };
@@ -33,6 +29,9 @@ export default (state = defaultState, action) => {
             const changeIndex = Object.keys(newState.list).length
             newState.style = action.style;
             newState.changeIndex.push(changeIndex);
+            return newState;
+        case INIT_LIST:
+            newState.list = action.data;
             return newState;
         default:
             return state;
