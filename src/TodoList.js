@@ -1,79 +1,54 @@
-import React, { Component } from 'react';
-import "antd/dist/antd.css";
-import store from './store'
-import TodoListUI from './TodoListUI';
-import { getInputChangeAction, getAddItemAction, getDelectItemAction, getstyleChangeAction, getInitList } from './store/actionCreators';
-
-class TodoList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = store.getState();
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleBtnClick = this.handleBtnClick.bind(this);
-    this.handleChangeStyleClick = this.handleChangeStyleClick.bind(this);
-    this.handleDeleteClick = this.handleDeleteClick.bind(this);
-    this.handleStoreChange = this.handleStoreChange.bind(this);
-
-    store.subscribe(this.handleStoreChange);
-  }
-
-  render() {
-    return <TodoListUI
-      inputValue={this.state.inputValue}
-      list={this.state.list}
-      style={this.state.style}
-      changeIndex={this.state.changeIndex}
-      handleInputChange={this.handleInputChange}
-      handleBtnClick={this.handleBtnClick}
-      handleChangeStyleClick={this.handleChangeStyleClick}
-      handleDeleteClick={this.handleDeleteClick}
-    />;
-  }
-
-  componentDidMount() {
-    //组件挂载时候，注册keypress事件
-    document.addEventListener('keypress', this.handleEnterKey);
-    const action=getInitList();
-    store.dispatch(action);
-  }
-
-  //判断点击的键盘的keyCode是否为13，是就调用上面的搜索函数
-  handleEnterKey = (e) => {
-    if (e.keyCode === 13) { //主要区别就是这里，可以直接获取到keyCode的值
-      this.handleBtnClick()
-    }
-  }
-
-  handleInputChange(e) {
-    const action = getInputChangeAction(e.target.value);
-    store.dispatch(action);
-  }
-
-  handleStoreChange() {
-    this.setState(store.getState())
-  }
-
-  handleBtnClick() {
-    if (this.state.inputValue === "") return;
-    const action = getAddItemAction()
-    store.dispatch(action)
-  }
-
-  handleChangeStyleClick(key) {
-    console.log("style-key:", key);
-    let style = {};
-    if (key === "blod") {
-      style.fontWeight = 800
-    }
-    const action = getstyleChangeAction(style)
-    store.dispatch(action)
-  }
-
-  handleDeleteClick(index) {
-    const action = getDelectItemAction(index);
-    store.dispatch(action);
-  }
+import React from 'react';
+import { connect } from 'react-redux';
+import { addTodoItemAction, delTodoItemAction, changeInputValueAction } from './store/actionCreators'
+const TodoList = (props) => {
+    const { inputValue, list, changeInputValue, handleCommitClick, deleteItem } = props;
+    return (
+        <div>
+            <input value={inputValue} onChange={changeInputValue}></input>
+            <button onClick={handleCommitClick}>提交</button>
+            <ul>
+                {
+                    list.map((item, index) => {
+                        return <li onClick={() => { deleteItem(index) }} key={index}>{item}</li>
+                    })
+                }
+            </ul>
+        </div>
+    );
 }
 
-export default TodoList;
+// document.addEventListener('keypress', handleEnterKey());
+// //判断点击的键盘的keyCode是否为13，是就调用上面的搜索函数
+// function handleEnterKey(e) {
+//     if (e.keyCode === 13) { //主要区别就是这里，可以直接获取到keyCode的值
+//         this.handleCommitClick()
+//     }
+// }
+
+const mapStateToProps = (state) => {
+    console.log("state:", state);
+    return {
+        inputValue: state.inputValue,
+        list: state.list
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changeInputValue: (e) => {
+            const action = changeInputValueAction(e.target.value);
+            dispatch(action);
+        },
+        handleCommitClick() {
+            const action = addTodoItemAction();
+            dispatch(action);
+        },
+        deleteItem(e) {
+            console.log("节点信息：", e);
+            const action = delTodoItemAction(e);
+            dispatch(action);
+        }
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);
